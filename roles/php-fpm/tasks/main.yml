@@ -1,4 +1,12 @@
 ---
+- name: Install dependencies from RHEL 7 repo
+  yum: name={{ item }} state=present
+  with_items:
+    - enchant
+    - httpd
+    - libicu
+    - libzip
+
 - name: Install php-fpm and deps
   yum: name={{ item }} state=present
   with_items:
@@ -13,8 +21,8 @@
     - php-mysql
     - php-PHPMailer
     - php-process
-    - php-simplepie
     - php-xml
+# - php-simplepie
 
 - name: Disable default pool
   command: mv /etc/php-fpm.d/www.conf /etc/php-fpm.d/www.disabled creates=/etc/php-fpm.d/www.disabled
