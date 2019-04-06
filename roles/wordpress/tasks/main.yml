@@ -47,6 +47,31 @@
 - name: Change ownership of WordPress installation
   file: path=/var/www/html/wordpress/ owner=wordpress group=wordpress state=directory recurse=yes
 
+- name: set the SELinux policy for the Wordpress directory
+  command: semanage fcontext -a -t httpd_sys_content_t "/var/www/html/wordpress(/.*)?"
+
+- name: set the SELinux policy for wp-config.php
+  command: semanage fcontext -a -t httpd_sys_script_exec_t "/var/www/html/wordpress/wp-config\.php"
+
+- name: set the SELinux policy for wp-content directory
+  command: semanage fcontext -a -t httpd_sys_rw_content_t "/var/www/html/wordpress/wp-content(/.*)?"
+
+- name: set the SELinux policy for the *.php files
+  command: semanage fcontext -a -t httpd_sys_script_exec_t "/var/www/html/wordpress/.*\.php"
+
+- name: set the SELinux policy for the Upgrade directory
+  command: semanage fcontext -a -t httpd_sys_rw_content_t "/var/www/html/wordpress/wp-content/upgrade(/.*)?"
+
+- name: set the SELinux policy for the Uploads directory
+  command: semanage fcontext -a -t httpd_sys_rw_content_t "/var/www/html/wordpress/wp-content/uploads(/.*)?"
+
+- name: set the SELinux policy for the wp-includes php files
+  command: semanage fcontext -a -t httpd_sys_script_exec_t "/var/www/html/wordpress/wp-includes/.*\.php"
+
+- name: set the SELinux on all the Files
+  command: restorecon -Rv /var/www/html/wordpress
+
+
 - name: Start services
   systemd:
     name: "{{ item }}"
